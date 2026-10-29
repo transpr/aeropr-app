@@ -2,12 +2,14 @@ import type { Release } from "../lib/supabase";
 import { CATEGORY_LABELS, formatDate, isDateEstimated, excerpt } from "../lib/labels";
 import { t, type Locale } from "../lib/dictionaries";
 import { orgByDbName, detectOrgsInText, logoUrl } from "../lib/orgs";
+import { releaseUrl } from "../lib/releaseUrl";
 
 export default function ReleaseRow({ r, locale }: { r: Release; locale: Locale }) {
   const est = isDateEstimated(r);
   const desc = excerpt(r.body_en || r.body, 220);
   const org = orgByDbName(r.org_name);
   const coOrgs = detectOrgsInText(r.title + " " + (r.body_en || r.body).slice(0, 2000), r.org_name);
+  const href = releaseUrl(r);
   return (
     <article className="release-row">
       <div className="top">
@@ -22,10 +24,10 @@ export default function ReleaseRow({ r, locale }: { r: Release; locale: Locale }
         ))}
         {coOrgs.length > 0 && <span className="badge-joint">{t(locale, "joint_badge")}</span>}
       </div>
-      <h3><a href={"/release/" + r.id}>{r.title}</a></h3>
+      <h3><a href={href}>{r.title}</a></h3>
       {desc && desc !== r.title && <p className="desc">{desc}</p>}
       <div className="foot">
-        <a href={"/release/" + r.id}>{t(locale, "read_on_site")}</a>
+        <a href={href}>{t(locale, "read_on_site")}</a>
         <a href={r.source_url}>{t(locale, "rel_read")} ({r.language.toUpperCase()}) ↗</a>
       </div>
     </article>

@@ -61,6 +61,19 @@ export async function getReleaseById(id: string): Promise<Release | null> {
   return rows?.[0] ?? null;
 }
 
+/** All releases of one source published on a given UTC day (YYYY-MM-DD). */
+export async function getReleasesBySourceAndDate(sourceSlug: string, date: string, limit = 100): Promise<Release[]> {
+  const from = date + "T00:00:00Z";
+  const next = new Date(Date.UTC(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)));
+  next.setUTCDate(next.getUTCDate() + 1);
+  const to = next.toISOString();
+  return supabase<Release[]>(
+    "press_releases?source_slug=eq." + encodeURIComponent(sourceSlug) +
+    "&published_at=gte." + from + "&published_at=lt." + to +
+    "&select=*&order=published_at.desc&limit=" + limit,
+  );
+}
+
 export async function getReleasesByOrg(orgName: string | string[], limit = 100): Promise<Release[]> {
   const names = (Array.isArray(orgName) ? orgName : [orgName])
     .map((n) => `"${n.replace(/"/g, "")}"`)
