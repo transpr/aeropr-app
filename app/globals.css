@@ -168,3 +168,5 @@ code, .mono { font-family: var(--font-mono); }
   .sidebar nav, .sidebar .sidebar-bottom { flex-direction: row; flex-wrap: wrap; }
   .sidebar .sidebar-bottom { margin-top: 10px; }
 }
+
+.section-sub { font-size: 14px; color: var(--color-text-secondary); margin: -8px 0 12px; }

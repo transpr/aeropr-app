@@ -46,8 +46,9 @@ export default async function Home() {
       <section className="container">
         <div className="page-head">
           <h2>{t(locale, "latest")}</h2>
-          <span className="count">{t(locale, "latest_sub")} · <a href="/press">{t(locale, "view_all")}</a></span>
+          <span className="count"><a href="/press">{t(locale, "view_all")}</a></span>
         </div>
+        <p className="section-sub">{t(locale, "latest_sub")}</p>
         <div className="releases">
           {releases.length === 0 ? (
             <p style={{ padding: 20, color: "var(--color-text-secondary)" }}>{t(locale, "empty")}</p>
