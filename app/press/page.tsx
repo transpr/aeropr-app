@@ -2,7 +2,7 @@ import Link from "next/link";
 import ReleaseRow from "../../ReleaseRow";
 import { getLatest, getOrgs, type Release } from "../../lib/supabase";
 import { CATEGORY_LABELS } from "../../lib/labels";
-import { t } from "../lib/i18n" === undefined ? undefined : (await import("../../lib/i18n")).t;
+import { t } from "../../lib/i18n";
 import { slugify } from "../../lib/orgs";
 import { getLang } from "../../lib/lang";
 
@@ -40,7 +40,7 @@ export default async function PressPage({ searchParams }: PageProps) {
         <button type="submit">{t(lang, "search_btn")}</button>
       </form>
       <div className="filters" style={{ marginTop: 14 }}>
-        <Link href={qs({ cat: sp.cat === undefined ? undefined : sp.cat })} className={!sp.org ? "on" : ""}>{t(lang, "all_orgs")}</Link>
+        <Link href={qs({})} className={!sp.org ? "on" : ""}>{t(lang, "all_orgs")}</Link>
         {orgs.slice(0, 12).map((o) => (
           <Link key={o.org_name} href={"/org/" + slugify(o.org_name)} className={sp.org === o.org_name ? "on" : ""}>
             {o.org_name} ({o.n})

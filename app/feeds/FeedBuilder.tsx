@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
+import { t, type Lang } from "../../lib/i18n";
 
 export default function FeedBuilder({
   orgs,
   categories,
+  lang,
 }: {
   orgs: string[];
   categories: [string, string][];
+  lang: Lang;
 }) {
   const [selectedOrgs, setSelectedOrgs] = useState<string[]>([]);
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
@@ -34,7 +37,7 @@ export default function FeedBuilder({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed to create feed");
+      if (!res.ok) throw new Error(data.error ?? t(lang, "failed_create"));
       setToken(data.token);
     } catch (e: any) {
       setError(e.message);
@@ -45,10 +48,10 @@ export default function FeedBuilder({
 
   return (
     <div className="panel">
-      <h3>Build your feed</h3>
+      <h3>{t(lang, "build_feed")}</h3>
       {orgs.length > 0 && (
         <>
-          <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "6px 0 8px" }}>Organizations</p>
+          <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "6px 0 8px" }}>{t(lang, "orgs_label")}</p>
           <div className="checks">
             {orgs.map((o) => (
               <label key={o}>
@@ -59,7 +62,7 @@ export default function FeedBuilder({
           </div>
         </>
       )}
-      <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "14px 0 8px" }}>Topics</p>
+      <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "14px 0 8px" }}>{t(lang, "topics_label")}</p>
       <div className="checks">
         {categories.map(([slug, label]) => (
           <label key={slug}>
@@ -68,14 +71,14 @@ export default function FeedBuilder({
           </label>
         ))}
       </div>
-      <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "14px 0 8px" }}>Keywords (comma-separated)</p>
+      <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "14px 0 8px" }}>{t(lang, "keywords_label")}</p>
       <div className="searchbar" style={{ marginTop: 0 }}>
         <input
           type="text"
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
-          placeholder="grève, A350, results…"
-          aria-label="Keywords"
+          placeholder={t(lang, "keywords_ph")}
+          aria-label={t(lang, "keywords_label")}
         />
       </div>
       <div style={{ marginTop: 16 }}>
@@ -83,13 +86,13 @@ export default function FeedBuilder({
           padding: "9px 16px", background: "var(--color-accent)", color: "#fff", border: "none",
           borderRadius: "var(--radius-control)", fontWeight: 600, fontSize: 13.5, cursor: busy ? "wait" : "pointer",
         }}>
-          {busy ? "Creating…" : "Generate RSS URL"}
+          {busy ? t(lang, "creating") : t(lang, "generate")}
         </button>
       </div>
       {error && <p style={{ color: "var(--color-error)", marginTop: 10 }}>{error}</p>}
       {token && (
         <div className="feed-url">
-          <a href={`/feed/${token}.xml`}>/feed/{token}.xml</a>
+          <a href={"/feed/" + token + ".xml"}>{"/feed/" + token + ".xml"}</a>
         </div>
       )}
     </div>

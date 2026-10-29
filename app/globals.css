@@ -39,9 +39,10 @@ code, .mono { font-family: var(--font-mono); }
 .logo { font-weight: 700; font-size: 16px; color: var(--color-structure); display: flex; align-items: center; gap: 7px; }
 .logo .dot { width: 8px; height: 8px; border-radius: 2px; background: var(--color-accent); }
 .logo .dot2 { background: var(--color-accent-secondary); margin-left: -3px; }
-.nav { display: flex; gap: 18px; font-size: 13.5px; color: var(--color-text-secondary); }
+.nav { display: flex; gap: 18px; font-size: 13.5px; color: var(--color-text-secondary); align-items: center; }
 .nav a { color: var(--color-text-secondary); }
 .nav a:hover { color: var(--color-accent); text-decoration: none; }
+.lang-select { padding: 4px 8px; border: 1px solid var(--color-border); border-radius: var(--radius-control); font-size: 12.5px; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); cursor: pointer; }
 
 /* Hero — compact, factual, search-first */
 .hero { border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
@@ -51,11 +52,11 @@ code, .mono { font-family: var(--font-mono); }
 .hero p { color: var(--color-text-secondary); max-width: 640px; font-size: 14px; }
 
 .searchbar { display: flex; gap: 8px; margin-top: 18px; max-width: 560px; }
-.searchbar input[type="search"] {
+.searchbar input[type="search"], .searchbar input[type="text"] {
   flex: 1; padding: 9px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-control);
   background: var(--color-surface); font-size: 14px; font-family: var(--font-sans); color: var(--color-text);
 }
-.searchbar input[type="search"]:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
+.searchbar input[type="search"]:focus, .searchbar input[type="text"]:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
 .searchbar button {
   padding: 9px 16px; background: var(--color-accent); color: #fff; border: none; border-radius: var(--radius-control);
   font-weight: 600; font-size: 13.5px; cursor: pointer; font-family: var(--font-sans);
@@ -67,8 +68,11 @@ code, .mono { font-family: var(--font-mono); }
 .release-row { display: block; padding: 13px 16px; border-bottom: 1px solid var(--color-border); }
 .release-row:last-child { border-bottom: none; }
 .release-row:hover { background: var(--color-background); }
-.release-row .top { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-bottom: 3px; }
+.release-row .top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 3px; }
 .release-row .org { font-size: 12px; font-weight: 600; color: var(--color-structure); }
+.org-line { display: inline-flex; align-items: center; gap: 6px; }
+.org-line:hover { text-decoration: none; }
+.org-logo { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; flex: none; }
 .release-row .sep, .release-row .date { font-size: 12px; color: var(--color-text-secondary); font-family: var(--font-mono); }
 .release-row .cat { font-size: 11.5px; color: var(--color-text-secondary); }
 .release-row .cat::before { content: "— "; color: var(--color-border); }
@@ -76,18 +80,34 @@ code, .mono { font-family: var(--font-mono); }
 .release-row h3 { font-size: 15px; font-weight: 600; line-height: 1.35; margin: 2px 0 4px; }
 .release-row h3 a { color: var(--color-structure); }
 .release-row .desc { font-size: 13px; color: var(--color-text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.release-row .foot { margin-top: 6px; font-size: 12px; color: var(--color-text-secondary); display: flex; gap: 14px; }
+.release-row .foot { margin-top: 6px; font-size: 12px; color: var(--color-text-secondary); display: flex; gap: 14px; flex-wrap: wrap; }
 .release-row .foot a { font-size: 12px; }
+.badge-joint { font-size: 11px; color: var(--color-accent-secondary); border: 1px solid var(--color-accent-secondary); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
 
 /* Section headers */
 .page-head { display: flex; align-items: baseline; justify-content: space-between; padding: 26px 0 14px; flex-wrap: wrap; gap: 8px; }
 .page-head h2 { font-size: 20px; }
 .page-head .count { font-size: 13px; color: var(--color-text-secondary); font-family: var(--font-mono); }
+.org-hero { align-items: center; }
+.org-hero img { border-radius: 6px; }
 
 /* Filters — text links, not pills */
 .filters { display: flex; gap: 6px 14px; padding-bottom: 14px; flex-wrap: wrap; font-size: 13px; }
 .filters a { color: var(--color-text-secondary); }
 .filters a.on { color: var(--color-accent); font-weight: 600; }
+
+/* Article (release detail page) */
+.breadcrumb { font-size: 13px; padding-bottom: 2px; }
+.article { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: 28px 32px; max-width: 820px; margin: 0 auto 40px; }
+.article .meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 12.5px; color: var(--color-text-secondary); }
+.article .meta .org-name { font-size: 13px; font-weight: 600; color: var(--color-structure); }
+.article .meta .cat::before { content: "— "; color: var(--color-border); }
+.article h1 { font-size: 24px; line-height: 1.3; margin: 12px 0 14px; }
+.article .summary { border-left: 3px solid var(--color-accent); padding: 8px 14px; background: var(--color-background); margin: 14px 0; font-size: 14px; }
+.article .body p { margin: 12px 0; font-size: 15px; line-height: 1.65; white-space: pre-wrap; }
+.article .translation-note { margin-top: 16px; font-size: 12px; color: var(--color-text-secondary); font-style: italic; }
+.article .source-link { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--color-border); font-size: 13px; }
+.org-logo-lg { width: 28px; height: 28px; border-radius: 5px; object-fit: contain; flex: none; }
 
 /* Tables (sources page) */
 .table { width: 100%; border-collapse: collapse; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); overflow: hidden; font-size: 13.5px; }
