@@ -1,1 +1,61 @@
-aW1wb3J0IExpbmsgZnJvbSAibmV4dC9saW5rIjsKaW1wb3J0IFJlbGVhc2VSb3cgZnJvbSAiLi4vUmVsZWFzZVJvdyI7CmltcG9ydCB7IGdldExhdGVzdCwgZ2V0T3JncywgdHlwZSBSZWxlYXNlIH0gZnJvbSAiLi4vLi4vbGliL3N1cGFiYXNlIjsKaW1wb3J0IHsgQ0FURUdPUllfTEFCRUxTIH0gZnJvbSAiLi4vLi4vbGliL2xhYmVscyI7CgpleHBvcnQgY29uc3QgZHluYW1pYyA9ICJmb3JjZS1keW5hbWljIjsKCmludGVyZmFjZSBQYWdlUHJvcHMgeyBzZWFyY2hQYXJhbXM6IFByb21pc2U8eyBxPzogc3RyaW5nOyBvcmc/OiBzdHJpbmc7IGNhdD86IHN0cmluZyB9PiB9CgpleHBvcnQgZGVmYXVsdCBhc3luYyBmdW5jdGlvbiBQcmVzc1BhZ2UoeyBzZWFyY2hQYXJhbXMgfTogUGFnZVByb3BzKSB7CiAgY29uc3Qgc3AgPSBhd2FpdCBzZWFyY2hQYXJhbXM7CiAgbGV0IHJlbGVhc2VzOiBSZWxlYXNlW10gPSBbXTsKICBsZXQgb3JnczogeyBvcmdfbmFtZTogc3RyaW5nOyBuOiBudW1iZXIgfVtdID0gW107CiAgdHJ5IHsKICAgIHJlbGVhc2VzID0gYXdhaXQgZ2V0TGF0ZXN0KCJhaXIiLCB7IHE6IHNwLnEsIGNhdDogc3AuY2F0IH0sIDIwMCk7CiAgICBvcmdzID0gYXdhaXQgZ2V0T3JncygiYWlyIik7CiAgfSBjYXRjaCB7IC8qIGVtcHR5IHN0YXRlICovIH0KICBpZiAoc3Aub3JnKSByZWxlYXNlcyA9IHJlbGVhc2VzLmZpbHRlcigocikgPT4gci5vcmdfbmFtZSA9PT0gc3Aub3JnKTsKCiAgY29uc3QgcXMgPSAob3ZlcjogUmVjb3JkPHN0cmluZywgc3RyaW5nIHwgdW5kZWZpbmVkPikgPT4gewogICAgY29uc3QgcCA9IG5ldyBVUkxTZWFyY2hQYXJhbXMoKTsKICAgIGNvbnN0IG1lcmdlZCA9IHsgcTogc3AucSwgb3JnOiBzcC5vcmcsIGNhdDogc3AuY2F0LCAuLi5vdmVyIH07CiAgICBmb3IgKGNvbnN0IFtrLCB2XSBvZiBPYmplY3QuZW50cmllcyhtZXJnZWQpKSBpZiAodikgcC5zZXQoaywgdik7CiAgICBjb25zdCBzID0gcC50b1N0cmluZygpOwogICAgcmV0dXJuIHMgPyBgL3ByZXNzPyR7c31gIDogIi9wcmVzcyI7CiAgfTsKCiAgcmV0dXJuICgKICAgIDxkaXYgY2xhc3NOYW1lPSJjb250YWluZXIiPgogICAgICA8ZGl2IGNsYXNzTmFtZT0icGFnZS1oZWFkIj4KICAgICAgICA8aDI+UHJlc3MgcmVsZWFzZXM8L2gyPgogICAgICAgIDxzcGFuIGNsYXNzTmFtZT0iY291bnQiPntyZWxlYXNlcy5sZW5ndGh9IHNob3duILcgdXBkYXRlZCBjb250aW51b3VzbHk8L3NwYW4+CiAgICAgIDwvZGl2PgogICAgICA8Zm9ybSBjbGFzc05hbWU9InNlYXJjaGJhciIgYWN0aW9uPSIvcHJlc3MiIG1ldGhvZD0iZ2V0IiByb2xlPSJzZWFyY2giPgogICAgICAgIDxpbnB1dCB0eXBlPSJzZWFyY2giIG5hbWU9InEiIGRlZmF1bHRWYWx1ZT17c3AucX0gcGxhY2Vob2xkZXI9IlNlYXJjaCB0aXRsZXMgYW5kIGNvbnRlbnQmIiBhcmlhLWxhYmVsPSJTZWFyY2giIC8+CiAgICAgICAgPGJ1dHRvbiB0eXBlPSJzdWJtaXQiPlNlYXJjaDwvYnV0dG9uPgogICAgICA8L2Zvcm0+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJmaWx0ZXJzIiBzdHlsZT17eyBtYXJnaW5Ub3A6IDE0IH19PgogICAgICAgIDxMaW5rIGhyZWY9e3FzKHsgb3JnOiB1bmRlZmluZWQgfSl9IGNsYXNzTmFtZT17IXNwLm9yZyA/ICJvbiIgOiAiIn0+QWxsIG9yZ2FuaXphdGlvbnM8L0xpbms+CiAgICAgICAge29yZ3Muc2xpY2UoMCwgMTIpLm1hcCgobykgPT4gKAogICAgICAgICAgPExpbmsga2V5PXtvLm9yZ19uYW1lfSBocmVmPXtxcyh7IG9yZzogby5vcmdfbmFtZSB9KX0gY2xhc3NOYW1lPXtzcC5vcmcgPT09IG8ub3JnX25hbWUgPyAib24iIDogIiJ9PgogICAgICAgICAgICB7by5vcmdfbmFtZX0gKHtvLm59KQogICAgICAgICAgPC9MaW5rPgogICAgICAgICkpfQogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzc05hbWU9ImZpbHRlcnMiPgogICAgICAgIDxMaW5rIGhyZWY9e3FzKHsgY2F0OiB1bmRlZmluZWQgfSl9IGNsYXNzTmFtZT17IXNwLmNhdCA/ICJvbiIgOiAiIn0+QWxsIHRvcGljczwvTGluaz4KICAgICAgICB7T2JqZWN0LmVudHJpZXMoQ0FURUdPUllfTEFCRUxTKS5tYXAoKFtzbHVnLCBsYWJlbF0pID0+ICgKICAgICAgICAgIDxMaW5rIGtleT17c2x1Z30gaHJlZj17cXMoeyBjYXQ6IHNsdWcgfSl9IGNsYXNzTmFtZT17c3AuY2F0ID09PSBzbHVnID8gIm9uIiA6ICIifT57bGFiZWx9PC9MaW5rPgogICAgICAgICkpfQogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzc05hbWU9InJlbGVhc2VzIj4KICAgICAgICB7cmVsZWFzZXMubGVuZ3RoID09PSAwID8gKAogICAgICAgICAgPHAgc3R5bGU9e3sgcGFkZGluZzogMjAsIGNvbG9yOiAidmFyKC0tY29sb3ItdGV4dC1zZWNvbmRhcnkpIiB9fT4KICAgICAgICAgICAgTm8gcmVsZWFzZSBtYXRjaGVzIHRoZXNlIGZpbHRlcnMuCiAgICAgICAgICA8L3A+CiAgICAgICAgKSA6IHJlbGVhc2VzLm1hcCgocikgPT4gPFJlbGVhc2VSb3cga2V5PXtyLmlkfSByPXtyfSAvPil9CiAgICAgIDwvZGl2PgogICAgPC9kaXY+CiAgKTsKfQo=
+import Link from "next/link";
+import ReleaseRow from "../ReleaseRow";
+import { getLatest, getOrgs, type Release } from "../../lib/supabase";
+import { CATEGORY_LABELS } from "../../lib/labels";
+
+export const dynamic = "force-dynamic";
+
+interface PageProps { searchParams: Promise<{ q?: string; org?: string; cat?: string }> }
+
+export default async function PressPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  let releases: Release[] = [];
+  let orgs: { org_name: string; n: number }[] = [];
+  try {
+    releases = await getLatest("air", { q: sp.q, cat: sp.cat }, 200);
+    orgs = await getOrgs("air");
+  } catch { /* empty state */ }
+  if (sp.org) releases = releases.filter((r) => r.org_name === sp.org);
+
+  const qs = (over: Record<string, string | undefined>) => {
+    const p = new URLSearchParams();
+    const merged = { q: sp.q, org: sp.org, cat: sp.cat, ...over };
+    for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
+    const s = p.toString();
+    return s ? `/press?${s}` : "/press";
+  };
+
+  return (
+    <div className="container">
+      <div className="page-head">
+        <h2>Press releases</h2>
+        <span className="count">{releases.length} shown · updated continuously</span>
+      </div>
+      <form className="searchbar" action="/press" method="get" role="search">
+        <input type="search" name="q" defaultValue={sp.q} placeholder="Search titles and content…" aria-label="Search" />
+        <button type="submit">Search</button>
+      </form>
+      <div className="filters" style={{ marginTop: 14 }}>
+        <Link href={qs({ org: undefined })} className={!sp.org ? "on" : ""}>All organizations</Link>
+        {orgs.slice(0, 12).map((o) => (
+          <Link key={o.org_name} href={qs({ org: o.org_name })} className={sp.org === o.org_name ? "on" : ""}>
+            {o.org_name} ({o.n})
+          </Link>
+        ))}
+      </div>
+      <div className="filters">
+        <Link href={qs({ cat: undefined })} className={!sp.cat ? "on" : ""}>All topics</Link>
+        {Object.entries(CATEGORY_LABELS).map(([slug, label]) => (
+          <Link key={slug} href={qs({ cat: slug })} className={sp.cat === slug ? "on" : ""}>{label}</Link>
+        ))}
+      </div>
+      <div className="releases">
+        {releases.length === 0 ? (
+          <p style={{ padding: 20, color: "var(--color-text-secondary)" }}>
+            No release matches these filters.
+          </p>
+        ) : releases.map((r) => <ReleaseRow key={r.id} r={r} />)}
+      </div>
+    </div>
+  );
+}
