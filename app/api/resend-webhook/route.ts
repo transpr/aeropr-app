@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 // Resend Inbound webhook (email.received).
 // Adresses media lists : cp-{source_slug}@… — préfixe = source_slug, parse auto.
 // Payload = métadonnées seulement ; le corps est récupéré via l'API retrieve.
+// Signature vérifiée (svix) avec RESEND_WEBHOOK_SECRET (paramétré dans Vercel).
 
 const SUPA = () => ({
   url: process.env.SUPABASE_URL!,
@@ -38,11 +40,39 @@ function slugFromAddress(to: string): string | null {
   return m ? m[1] : null;
 }
 
+/** Vérifie la signature svix (Resend) : headers svix-id, svix-timestamp, svix-signature. */
+function verifySvix(rawBody: string, headers: Headers, secret: string): boolean {
+  const id = headers.get("svix-id") ?? "";
+  const timestamp = headers.get("svix-timestamp") ?? "";
+  const signatureHeader = headers.get("svix-signature") ?? "";
+  if (!id || !timestamp || !signatureHeader) return false;
+
+  // anti-replay : fenêtre de 5 minutes
+  const age = Math.abs(Date.now() / 1000 - Number(timestamp));
+  if (!Number.isFinite(age) || age > 300) return false;
+
+  const secretBytes = Buffer.from(secret.replace(/^whsec_/, ""), "base64");
+  const toSign = Buffer.from(`${id}.${timestamp}.${rawBody}`, "utf8");
+  const expected = createHmac("sha256", secretBytes).update(toSign).digest("base64");
+  const provided = signatureHeader.split(" ").find((p) => p.startsWith("v1,"));
+  if (!provided) return false;
+  const a = Buffer.from(provided.slice(3));
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 export async function POST(req: Request) {
   const { url, key } = SUPA();
+  const raw = await req.text();
+
+  const webhookSecret = process.env.RESEND_WEBHOOK_SECRET;
+  if (webhookSecret && !verifySvix(raw, req.headers, webhookSecret)) {
+    return NextResponse.json({ ok: false, error: "invalid signature" }, { status: 401 });
+  }
+
   let payload: any;
   try {
-    payload = await req.json();
+    payload = JSON.parse(raw);
   } catch {
     return NextResponse.json({ ok: false, error: "invalid json" }, { status: 400 });
   }
