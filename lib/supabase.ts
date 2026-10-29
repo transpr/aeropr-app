@@ -32,20 +32,20 @@ export interface FeedRow {
 }
 
 async function supabase<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" },
+  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
+    headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" },
     cache: "no-store",
     ...init,
   });
-  if (!res.ok) throw new Error(`Supabase ${path} -> ${res.status}`);
+  if (!res.ok) throw new Error("Supabase " + path + " -> " + res.status);
   return res.json() as Promise<T>;
 }
 
 export interface FeedFilters { q?: string; org?: string; cat?: string; sector?: string }
 
 export async function getLatest(sector: string, f: FeedFilters = {}, limit = 60): Promise<Release[]> {
-  let q = `press_releases?sector=eq.${sector}&select=*&order=published_at.desc&limit=${limit}`;
-  if (f.org) q += `&org_name=eq.${f.org}`;
+  let q = "press_releases?sector=eq." + sector + "&select=*&order=published_at.desc&limit=" + limit;
+  if (f.org) q += "&org_name=eq." + encodeURIComponent(f.org);
   const rows = await supabase<Release[]>(q);
   if (!f.q && !f.cat) return rows;
   const needle = (f.q ?? "").toLowerCase();
@@ -56,27 +56,38 @@ export async function getLatest(sector: string, f: FeedFilters = {}, limit = 60)
   });
 }
 
+export async function getRelease(id: string): Promise<Release | null> {
+  const rows = await supabase<Release[]>("press_releases?id=eq." + encodeURIComponent(id) + "&select=*");
+  return rows?.[0] ?? null;
+}
+
 export async function getOrgs(sector: string): Promise<{ org_name: string; n: number }[]> {
   const rows = await supabase<{ org_name: string }[]>(
-    `press_releases?sector=eq.${sector}&select=org_name&order=published_at.desc&limit=500`,
+    "press_releases?sector=eq." + sector + "&select=org_name&order=published_at.desc&limit=500",
   );
   const counts = new Map<string, number>();
   for (const r of rows) counts.set(r.org_name, (counts.get(r.org_name) ?? 0) + 1);
   return [...counts.entries()].map(([org_name, n]) => ({ org_name, n })).sort((a, b) => b.n - a.n);
 }
 
+export async function getOrgReleases(sector: string, org: string, limit = 200): Promise<Release[]> {
+  return supabase<Release[]>(
+    "press_releases?sector=eq." + sector + "&org_name=eq." + encodeURIComponent(org) +
+    "&select=*&order=published_at.desc&limit=" + limit,
+  );
+}
+
 export async function getFeed(token: string): Promise<FeedRow | null> {
-  const rows = await supabase<FeedRow[]>(`feeds?token=eq.${encodeURIComponent(token)}&select=*`);
+  const rows = await supabase<FeedRow[]>("feeds?token=eq." + encodeURIComponent(token) + "&select=*");
   return rows?.[0] ?? null;
 }
 
 export async function getReleasesForFeed(feed: FeedRow, limit = 100): Promise<Release[]> {
   const f = feed.filters ?? {};
-  let q = `press_releases?sector=eq.${feed.sector}&select=*&order=published_at.desc&limit=${limit}`;
-  if (f.org_groups?.length) q += `&org_group=in.(${f.org_groups.join(",")})`;
-  if (f.alliances?.length) q += `&alliance=in.(${f.alliances.join(",")})`;
+  let q = "press_releases?sector=eq." + feed.sector + "&select=*&order=published_at.desc&limit=" + limit;
+  if (f.org_groups?.length) q += "&org_group=in.(" + f.org_groups.join(",") + ")";
+  if (f.alliances?.length) q += "&alliance=in.(" + f.alliances.join(",") + ")";
   const rows = await supabase<Release[]>(q);
-  // f.sources holds org display names (as shown in the feed builder UI).
   if (f.sources?.length) {
     return rows.filter((r) => f.sources.includes(r.org_name));
   }
@@ -86,7 +97,7 @@ export async function getReleasesForFeed(feed: FeedRow, limit = 100): Promise<Re
   if (f.keywords?.length) {
     const kws = f.keywords.map((k: string) => k.toLowerCase());
     return rows.filter((r) => {
-      const hay = `${r.title}\n${r.body_en || r.body}`.toLowerCase();
+      const hay = (r.title + "\n" + (r.body_en || r.body)).toLowerCase();
       return kws.some((k: string) => hay.includes(k));
     });
   }
