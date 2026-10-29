@@ -30,6 +30,9 @@ export const DICT: Record<Locale, Record<string, string>> = {
     rel_not_found: "Release not found.", back: "← Back", date_est: "collection date",
     joint_badge: "Joint", joint_note: "Joint statement — also mentions:",
     org_releases: "releases", footer: "AeroPR aggregates official press releases. Each item links back to its original source.", footer_sources: "Sources & method",
+    sources_intro: "Every organization whose official press releases AeroPR collects. Direct sources are monitored at their newsroom (RSS feed, email media list or crawling); discovery sources are detected via news search, then collected from the original publisher.",
+    sources_total: "monitored organizations", sources_airlines: "airlines",
+    sources_direct: "direct newsroom sources", sources_groups: "industry groups",
   },
   fr: {
     nav_press: "Communiqués", nav_sources: "Sources", nav_feeds: "Flux RSS",
@@ -55,6 +58,9 @@ export const DICT: Record<Locale, Record<string, string>> = {
     rel_not_found: "Communiqué introuvable.", back: "← Retour", date_est: "date de collecte",
     joint_badge: "Conjoint", joint_note: "Communiqué commun — mentionne aussi :",
     org_releases: "communiqués", footer: "AeroPR agrège les communiqués de presse officiels. Chaque élément renvoie à sa source d'origine.", footer_sources: "Sources & méthode",
+    sources_intro: "Toutes les organisations dont AeroPR collecte les communiqués officiels. Les sources directes sont suivies à leur newsroom (flux RSS, media list email ou scraping) ; les sources découverte sont détectées via la recherche d'actualités, puis collectées chez l'éditeur original.",
+    sources_total: "organisations suivies", sources_airlines: "compagnies aériennes",
+    sources_direct: "sources newsroom directes", sources_groups: "groupes industriels",
   },
   it: {
     nav_press: "Comunicati stampa", nav_sources: "Fonti", nav_feeds: "Feed RSS",
@@ -80,6 +86,9 @@ export const DICT: Record<Locale, Record<string, string>> = {
     rel_not_found: "Comunicato non trovato.", back: "← Indietro", date_est: "data di raccolta",
     joint_badge: "Congiunto", joint_note: "Comunicato congiunto — menziona anche:",
     org_releases: "comunicati", footer: "AeroPR aggrega comunicati stampa ufficiali. Ogni elemento rimanda alla fonte originale.", footer_sources: "Fonti e metodo",
+    sources_intro: "Tutte le organizzazioni di cui AeroPR raccoglie i comunicati ufficiali. Le fonti dirette sono seguite nella loro newsroom (feed RSS, media list via email o scraping); le fonti discovery vengono rilevate tramite la ricerca di notizie, poi raccolte dall'editore originale.",
+    sources_total: "organizzazioni monitorate", sources_airlines: "compagnie aeree",
+    sources_direct: "fonti newsroom dirette", sources_groups: "gruppi industriali",
   },
   de: {
     nav_press: "Pressemitteilungen", nav_sources: "Quellen", nav_feeds: "RSS-Feeds",
@@ -105,6 +114,9 @@ export const DICT: Record<Locale, Record<string, string>> = {
     rel_not_found: "Mitteilung nicht gefunden.", back: "← Zurück", date_est: "Erfassungsdatum",
     joint_badge: "Gemeinsam", joint_note: "Gemeinsame Mitteilung — erwähnt auch:",
     org_releases: "Mitteilungen", footer: "AeroPR aggregiert offizielle Pressemitteilungen. Jedes Element verweist auf die Originalquelle.", footer_sources: "Quellen & Methode",
+    sources_intro: "Alle Organisationen, deren offizielle Pressemitteilungen AeroPR sammelt. Direkte Quellen werden in ihrer Newsroom verfolgt (RSS-Feed, E-Mail-Medienliste oder Crawling); Discovery-Quellen werden über die Nachrichtensuche erkannt und beim Originalherausgeber eingesammelt.",
+    sources_total: "überwachte Organisationen", sources_airlines: "Fluggesellschaften",
+    sources_direct: "direkte Newsroom-Quellen", sources_groups: "Branchengruppen",
   },
   es: {
     nav_press: "Notas de prensa", nav_sources: "Fuentes", nav_feeds: "Feeds RSS",
@@ -130,6 +142,9 @@ export const DICT: Record<Locale, Record<string, string>> = {
     rel_not_found: "Nota no encontrada.", back: "← Volver", date_est: "fecha de recogida",
     joint_badge: "Conjunta", joint_note: "Nota conjunta — también menciona a:",
     org_releases: "notas", footer: "AeroPR agrega notas de prensa oficiales. Cada elemento enlaza a su fuente original.", footer_sources: "Fuentes y método",
+    sources_intro: "Todas las organizaciones cuyas notas de prensa oficiales recopila AeroPR. Las fuentes directas se siguen en su sala de prensa (feed RSS, media list por email o scraping); las fuentes de descubrimiento se detectan mediante búsqueda de noticias y luego se recogen del editor original.",
+    sources_total: "organizaciones monitorizadas", sources_airlines: "aerolíneas",
+    sources_direct: "fuentes directas de sala de prensa", sources_groups: "grupos industriales",
   },
   pt: {
     nav_press: "Comunicados de imprensa", nav_sources: "Fontes", nav_feeds: "Feeds RSS",
@@ -155,6 +170,9 @@ export const DICT: Record<Locale, Record<string, string>> = {
     rel_not_found: "Comunicado não encontrado.", back: "← Voltar", date_est: "data de recolha",
     joint_badge: "Conjunto", joint_note: "Comunicado conjunto — também menciona:",
     org_releases: "comunicados", footer: "AeroPR agrega comunicados de imprensa oficiais. Cada elemento remete para a sua fonte original.", footer_sources: "Fontes e método",
+    sources_intro: "Todas as organizações cujos comunicados oficiais o AeroPR recolhe. As fontes diretas são seguidas na sua sala de imprensa (feed RSS, media list por email ou scraping); as fontes de descoberta são detetadas via pesquisa de notícias e depois recolhidas no editor original.",
+    sources_total: "organizações monitorizadas", sources_airlines: "companhias aéreas",
+    sources_direct: "fontes diretas de sala de imprensa", sources_groups: "grupos industriais",
   },
 };
 

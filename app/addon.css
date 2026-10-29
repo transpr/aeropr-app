@@ -17,3 +17,30 @@
   border-top: 1px dashed var(--color-border);
   padding-top: 10px;
 }
+
+
+/* v4 — public Sources page (full registry) */
+.sources-intro { font-size: 14px; color: var(--color-text-secondary); max-width: 720px; margin: 8px 0 18px; }
+.sources-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 26px; }
+.sources-stats .stat {
+  background: var(--color-surface, #fff); border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 12px); padding: 10px 16px; min-width: 130px;
+}
+.sources-stats .stat strong { display: block; font-size: 22px; font-family: var(--font-plex-mono); }
+.sources-stats .stat span { font-size: 12px; color: var(--color-text-secondary); }
+.sources-group { margin-bottom: 28px; }
+.sources-group h2 { font-size: 17px; margin-bottom: 10px; }
+.sources-group h2 .count { color: var(--color-text-secondary); font-weight: 400; font-size: 13px; }
+.sources-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.source-item {
+  background: var(--color-surface, #fff); border: 1px solid var(--color-border);
+  border-radius: var(--radius-control, 8px); padding: 4px 10px; font-size: 13px;
+}
+.source-item a { text-decoration: none; color: inherit; }
+.source-item a:hover { text-decoration: underline; }
+.src-group { color: var(--color-text-secondary); font-size: 11px; margin-left: 6px; }
+.src-layer.direct {
+  margin-left: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+  background: var(--color-success-soft, #e7f4ec); color: var(--color-success, #18794e);
+  border-radius: 999px; padding: 1px 7px;
+}
