@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { t } from "../lib/i18n";
-import { getLang } from "../lib/lang";
-import LangSwitcher from "./LangSwitcher";
+import "./addon.css";
+import LocaleSwitcher from "./LocaleSwitcher";
+import { t } from "../lib/dictionaries";
+import { getLocale } from "../lib/i18n";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-plex-mono" });
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const lang = await getLang();
+  const locale = await getLocale();
   return (
-    <html lang={lang === "pt" ? "pt" : lang} data-brand="aeropr">
+    <html lang={locale} data-brand="aeropr">
       <body className={inter.variable + " " + plexMono.variable}>
         <header className="site-header">
           <div className="container inner">
@@ -25,19 +26,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <span className="dot" /><span className="dot dot2" /> AeroPR
             </a>
             <nav className="nav" aria-label="Main">
-              <a href="/press">{t(lang, "nav_press")}</a>
-              <a href="/sources">{t(lang, "nav_sources")}</a>
-              <a href="/feeds">{t(lang, "nav_feeds")}</a>
-              <a href="/api/releases?sector=air&limit=10">{t(lang, "nav_api")}</a>
-              <LangSwitcher current={lang} />
+              <a href="/press">{t(locale, "nav_press")}</a>
+              <a href="/sources">{t(locale, "nav_sources")}</a>
+              <a href="/feeds">{t(locale, "nav_feeds")}</a>
+              <a href="/api/releases?sector=air&amp;limit=10">API</a>
+              <LocaleSwitcher locale={locale} />
             </nav>
           </div>
         </header>
         <main data-brand="aeropr">{children}</main>
         <footer className="site-footer">
           <div className="container">
-            {t(lang, "footer_note")}
-            <a href="/sources"> {t(lang, "nav_sources")}</a>.
+            {t(locale, "footer")} <a href="/sources">{t(locale, "footer_sources")}</a>.
           </div>
         </footer>
       </body>

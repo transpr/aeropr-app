@@ -1,14 +1,11 @@
 import { getOrgs, getLatest, type Release } from "../../lib/supabase";
-import { t } from "../../lib/i18n";
-import { getLang } from "../../lib/lang";
-import { slugify } from "../../lib/orgs";
+import { t } from "../../lib/dictionaries";
+import { getLocale } from "../../lib/i18n";
 
 export const dynamic = "force-dynamic";
 
-const LOCALES: Record<string, string> = { en: "en-GB", fr: "fr-FR", it: "it-IT", de: "de-DE", es: "es-ES", pt: "pt-PT" };
-
 export default async function SourcesPage() {
-  const lang = await getLang();
+  const locale = await getLocale();
   let orgs: { org_name: string; n: number }[] = [];
   let recent: Release[] = [];
   try {
@@ -26,32 +23,32 @@ export default async function SourcesPage() {
   return (
     <div className="container">
       <div className="page-head">
-        <h2>{t(lang, "nav_sources")}</h2>
+        <h2>{t(locale, "sources_title")}</h2>
         {lastCrawl && (
-          <span className="count">{t(lang, "last_crawl")} {new Date(lastCrawl).toLocaleString(LOCALES[lang])}</span>
+          <span className="count">{t(locale, "last_crawl")} {new Date(lastCrawl).toLocaleString("en-GB")}</span>
         )}
       </div>
       <p style={{ color: "var(--color-text-secondary)", maxWidth: 720, marginBottom: 18 }}>
-        {t(lang, "sources_desc")}
+        {t(locale, "sources_desc")}
       </p>
       <table className="table">
         <thead>
           <tr>
-            <th>{t(lang, "th_org")}</th>
-            <th>{t(lang, "th_count")}</th>
-            <th>{t(lang, "th_last")}</th>
-            <th>{t(lang, "th_status")}</th>
+            <th>{t(locale, "col_org")}</th>
+            <th>{t(locale, "col_count")}</th>
+            <th>{t(locale, "col_last")}</th>
+            <th>{t(locale, "col_status")}</th>
           </tr>
         </thead>
         <tbody>
           {orgs.length === 0 ? (
-            <tr><td colSpan={4} style={{ color: "var(--color-text-secondary)" }}>{t(lang, "no_sources")}</td></tr>
+            <tr><td colSpan={4} style={{ color: "var(--color-text-secondary)" }}>{t(locale, "no_sources")}</td></tr>
           ) : orgs.map((o) => (
             <tr key={o.org_name}>
-              <td><a href={"/org/" + slugify(o.org_name)}>{o.org_name}</a></td>
+              <td>{o.org_name}</td>
               <td className="mono">{o.n}</td>
-              <td className="mono">{lastRelease.get(o.org_name) ? new Date(lastRelease.get(o.org_name)!).toLocaleDateString(LOCALES[lang]) : "—"}</td>
-              <td className="status-ok">{t(lang, "monitored")}</td>
+              <td className="mono">{lastRelease.get(o.org_name) ? new Date(lastRelease.get(o.org_name)!).toLocaleDateString("en-GB") : "—"}</td>
+              <td className="status-ok">{t(locale, "monitored")}</td>
             </tr>
           ))}
         </tbody>
