@@ -1,28 +1,44 @@
-// AirPR logo — abstract vertical stabilizer ("tail fin") with the Blue Jay
-// gradient (see brand identity reference). Variants: color (default, white
-// backgrounds), white (navy backgrounds), mono (single navy).
-export default function Logo({ variant = "color", height = 26 }: { variant?: "color" | "white" | "mono"; height?: number }) {
-  const gid = "airpr-grad-" + variant;
-  const fill = variant === "white" ? "#FFFFFF" : variant === "mono" ? "#082545" : "url(#" + gid + ")";
+// AirPR logo — v0 "TailFin": abstract vertical stabilizer, Blue Jay gradient.
+// Exact geometry from the approved pixelmatch design (viewBox 0 0 100 80,
+// base fin + lighter facet overlay). Variants: color, white, mono.
+const FIN_PATH = "M2 78C24 58 40 30 58 13C68 4 84 1.5 100 0L83 44C78 58 68 66 52 70C36 74 18 76.5 2 78Z";
+const FACET_PATH = "M2 78C34 58 68 30 100 0L83 44C78 58 68 66 52 70C36 74 18 76.5 2 78Z";
+
+export default function Logo({
+  variant = "color",
+  finHeight = 24,
+  wordSize = 19,
+}: {
+  variant?: "color" | "white" | "mono";
+  finHeight?: number;
+  wordSize?: number;
+}) {
+  const gid = "airpr-fin-" + variant;
+  const w = Math.round((finHeight * 100) / 80);
+  const finFill = variant === "color" ? "url(#" + gid + ")" : variant === "white" ? "#FFFFFF" : "#082545";
   return (
-    <span className="logo-lockup" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-      <svg width={Math.round(height * 0.86)} height={height} viewBox="0 0 24 28" aria-hidden="true" role="presentation">
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+      <svg width={w} height={finHeight} viewBox="0 0 100 80" aria-hidden="true" role="presentation">
         {variant === "color" && (
           <defs>
-            <linearGradient id={gid} x1="0" y1="1" x2="1" y2="0">
+            <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="100" y2="0">
               <stop offset="0" stopColor="#002B5C" />
-              <stop offset="0.45" stopColor="#0057D9" />
-              <stop offset="0.75" stopColor="#008BFF" />
-              <stop offset="1" stopColor="#20B9FF" />
+              <stop offset="0.5" stopColor="#0057D9" />
+              <stop offset="1" stopColor="#008BFF" />
+            </linearGradient>
+            <linearGradient id={gid + "-f"} gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="100" y2="0">
+              <stop offset="0" stopColor="#0057D9" />
+              <stop offset="0.5" stopColor="#0A7BFF" />
+              <stop offset="1" stopColor="#3FB0FF" />
             </linearGradient>
           </defs>
         )}
-        <path
-          fill={fill}
-          d="M18.2 0.8 C11.4 5.2 7.2 11.6 5.6 19.4 L4.4 27.2 C9.8 24.9 14.2 21 16.6 16.2 C18.7 12 19.2 6.3 18.2 0.8 Z"
-        />
+        <path d={FIN_PATH} fill={finFill} />
+        {variant === "color" && <path d={FACET_PATH} fill={"url(#" + gid + "-f)"} opacity="0.9" />}
       </svg>
-      <span className={"wordmark" + (variant === "white" ? " white" : "")}>AirPR</span>
+      <span className={"wordmark" + (variant === "white" ? " white" : "")} style={{ fontSize: wordSize }}>
+        AirPR
+      </span>
     </span>
   );
 }

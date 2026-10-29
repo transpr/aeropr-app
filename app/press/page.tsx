@@ -1,105 +1,93 @@
-import Link from "next/link";
-import ReleaseRow from "../ReleaseRow";
-import Logo from "../Logo";
-import { getLatest, getOrgs, type Release } from "../../lib/supabase";
-import { CATEGORY_LABELS } from "../../lib/labels";
+import { getLatest, type Release } from "../../lib/supabase";
+import { excerpt, isDateEstimated } from "../../lib/labels";
 import { t } from "../../lib/dictionaries";
 import { getLocale } from "../../lib/i18n";
+import { releaseUrl } from "../../lib/releaseUrl";
+import NewsDashboard, { type NdCategory, type NdItem } from "./NewsDashboard";
 
 export const dynamic = "force-dynamic";
 
-interface PageProps { searchParams: Promise<{ q?: string; org?: string; cat?: string; type?: string }> }
+// source_type taxonomy -> v0 dashboard categories.
+const TYPE_TO_CAT: Record<string, NdCategory> = {
+  airline: "airlines",
+  airport: "airports",
+  oem: "manufacturers",
+};
+const cat = (st: string): NdCategory => TYPE_TO_CAT[st] ?? "organizations";
 
-// Sidebar type filters → source_type sets (see lib/registry for the taxonomy).
-const TYPE_SETS: Record<string, string[]> = {
-  airline: ["airline"],
-  airport: ["airport"],
-  oem: ["oem"],
-  org: ["regulator", "alliance", "mixed", "org", "group", "mro", "fuel", "inframan", "union", "consumer", "eco"],
+// Source mark: short identifier for the list (v0 SourceMark), e.g. "AIRBUS", "AF·KLM".
+function sourceShort(name: string): string {
+  const words = name.replace(/[^\p{L}\p{N} ]/gu, "").split(/\s+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 7).toUpperCase();
+  return words.slice(0, 3).map((w) => w[0]).join("·").toUpperCase();
+}
+
+const prettyDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+// Legacy URL filters (?type=airline…) -> v0 categories.
+const LEGACY_TYPE: Record<string, NdCategory> = {
+  airline: "airlines", airport: "airports", oem: "manufacturers", org: "organizations",
+  airlines: "airlines", airports: "airports", manufacturers: "manufacturers", organizations: "organizations",
 };
 
-const icon = (d: string) => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>
-);
+interface PageProps {
+  searchParams: Promise<{ q?: string; type?: string; article?: string }>;
+}
 
 export default async function PressPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const locale = await getLocale();
   let releases: Release[] = [];
-  let orgs: { org_name: string; n: number }[] = [];
-  try {
-    releases = await getLatest("air", { q: sp.q, cat: sp.cat }, 200);
-    orgs = await getOrgs("air");
-  } catch { /* empty state */ }
-  if (sp.org) releases = releases.filter((r) => r.org_name === sp.org);
-  if (sp.type && TYPE_SETS[sp.type]) {
-    const set = TYPE_SETS[sp.type];
-    releases = releases.filter((r) => set.includes(r.source_type));
-  }
+  try { releases = await getLatest("air", {}, 200); } catch { /* empty state */ }
 
-  const qs = (over: Record<string, string | undefined>) => {
-    const p = new URLSearchParams();
-    const merged = { q: sp.q, org: sp.org, cat: sp.cat, type: sp.type, ...over };
-    for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
-    const s = p.toString();
-    return s ? "/press?" + s : "/press";
+  const items: NdItem[] = releases.map((r) => {
+    const est = isDateEstimated(r);
+    return {
+      id: r.id,
+      href: releaseUrl(r),
+      headline: r.title,
+      source: r.org_name,
+      sourceShort: sourceShort(r.org_name),
+      category: cat(r.source_type),
+      date: prettyDate(r.published_at) + (est ? " · " + t(locale, "date_est") : ""),
+      isNew: Date.now() - new Date(r.published_at).getTime() < 24 * 3600 * 1000,
+      excerpt: excerpt(r.body_en || r.body, 180),
+      originalUrl: r.source_url,
+    };
+  });
+
+  const labels = {
+    all: t(locale, "nav_all_news"),
+    airlines: t(locale, "nav_airlines"),
+    airports: t(locale, "nav_airports"),
+    manufacturers: t(locale, "nav_manufacturers"),
+    organizations: t(locale, "nav_organizations"),
+    searchPh: t(locale, "nd_search"),
+    searchLabel: t(locale, "search_btn"),
+    noMatch: t(locale, "no_match"),
+    new: t(locale, "badge_new"),
+    readOn: t(locale, "read_on_site"),
+    readOriginal: t(locale, "rel_read"),
+    settings: t(locale, "nd_settings"),
+    rss: "RSS",
+    api: t(locale, "nd_api"),
+    source: t(locale, "rel_source"),
+    origDate: t(locale, "nd_orig_date"),
+    typeTerm: t(locale, "nd_type_term"),
+    typeValue: t(locale, "nd_type_value"),
+    share: t(locale, "nd_share"),
+    download: t(locale, "nd_download"),
+    viewSource: t(locale, "nd_view_source"),
   };
 
-  const navItems = [
-    { key: undefined, label: t(locale, "nav_all_news"), icon: icon("<path d='M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2'/><path d='M18 14h-8M18 10h-8M18 18h-8'/>") },
-    { key: "airline", label: t(locale, "nav_airlines"), icon: icon("<path d='M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2Z'/>") },
-    { key: "airport", label: t(locale, "nav_airports"), icon: icon("<rect width='16' height='10' x='4' y='7' rx='2'/><path d='M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 17h20'/>") },
-    { key: "oem", label: t(locale, "nav_manufacturers"), icon: icon("<path d='M2 20a6 6 0 0 0 12 0v-7a4 4 0 0 1 4-4 4 4 0 0 0-4-4 4 4 0 0 0-4 4v7M2 20h12'/>") },
-    { key: "org", label: t(locale, "nav_organizations"), icon: icon("<circle cx='12' cy='12' r='10'/><path d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20'/>") },
-  ];
-
   return (
-    <div className="container">
-      <div className="press-layout">
-        <aside className="sidebar" aria-label="Filters">
-          <div className="sidebar-logo"><Logo variant="white" height={20} /></div>
-          <nav>
-            {navItems.map((n) => (
-              <Link key={n.label} href={qs({ type: n.key })} className={"item" + (sp.type === n.key || (!sp.type && n.key === undefined) ? " on" : "")}>
-                {n.icon}{n.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="sidebar-bottom">
-            <Link href="/feeds" className="item">{icon("<path d='M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16'/><circle cx='5' cy='19' r='1'/>")}RSS</Link>
-            <a href="/api/releases?sector=air&amp;limit=10" className="item">{icon("<path d='m16 18 6-6-6-6M8 6l-6 6 6 6'/>")}API &amp; webhooks</a>
-          </div>
-        </aside>
-        <div className="press-main">
-          <div className="page-head">
-            <h2>{sp.type ? navItems.find((n) => n.key === sp.type)?.label ?? t(locale, "press_title") : t(locale, "nav_all_news")}</h2>
-            <span className="count">{releases.length} {t(locale, "shown")}</span>
-          </div>
-          <form className="searchbar" action="/press" method="get" role="search">
-            <input type="search" name="q" defaultValue={sp.q} placeholder={t(locale, "search_ph2")} aria-label={t(locale, "search_btn")} />
-            <button type="submit">{t(locale, "search_btn")}</button>
-          </form>
-          <div className="filters" style={{ marginTop: 14 }}>
-            <Link href={qs({ org: undefined })} className={!sp.org ? "on" : ""}>{t(locale, "all_orgs")}</Link>
-            {orgs.slice(0, 12).map((o) => (
-              <Link key={o.org_name} href={qs({ org: o.org_name })} className={sp.org === o.org_name ? "on" : ""}>
-                {o.org_name} ({o.n})
-              </Link>
-            ))}
-          </div>
-          <div className="filters">
-            <Link href={qs({ cat: undefined })} className={!sp.cat ? "on" : ""}>{t(locale, "all_topics")}</Link>
-            {Object.entries(CATEGORY_LABELS[locale]).map(([slug, label]) => (
-              <Link key={slug} href={qs({ cat: slug })} className={sp.cat === slug ? "on" : ""}>{label}</Link>
-            ))}
-          </div>
-          <div className="releases">
-            {releases.length === 0 ? (
-              <p style={{ padding: 20, color: "var(--color-text-secondary)" }}>{t(locale, "no_match")}</p>
-            ) : releases.map((r) => <ReleaseRow key={r.id} r={r} locale={locale} />)}
-          </div>
-        </div>
-      </div>
-    </div>
+    <NewsDashboard
+      items={items}
+      labels={labels}
+      initialFilter={sp.type && LEGACY_TYPE[sp.type] ? LEGACY_TYPE[sp.type] : "all"}
+      initialQuery={sp.q ?? ""}
+      initialArticleId={sp.article}
+    />
   );
 }

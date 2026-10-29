@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 const iconProps = {
   width: 18, height: 18, viewBox: "0 0 24 24",
-  fill: "none", stroke: "currentColor", strokeWidth: 1.7,
+  fill: "none", stroke: "currentColor", strokeWidth: 1.75,
   strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
   "aria-hidden": true,
 };
@@ -23,13 +23,8 @@ export default async function Home() {
         <div className="hero-photo" aria-hidden="true" />
         <div className="hero-veil" aria-hidden="true" />
         <div className="container inner">
-          <div className="kicker">{t(locale, "hero_kicker")}</div>
           <h1>{t(locale, "hero_title")}</h1>
           <p>{t(locale, "hero_sub")}</p>
-          <form className="searchbar" action="/press" method="get" role="search">
-            <input type="search" name="q" placeholder={t(locale, "search_ph")} aria-label={t(locale, "search_btn")} />
-            <button type="submit">{t(locale, "search_btn")}</button>
-          </form>
           <div className="hero-features">
             <span className="feature">
               <svg {...iconProps}><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" /></svg>

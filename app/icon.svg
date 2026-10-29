@@ -1,13 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="0" y1="1" x2="1" y2="0">
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="56" y2="336" x2="256" y2="96">
+      <stop offset="0" stop-color="#002B5C"/>
+      <stop offset="0.5" stop-color="#0057D9"/>
+      <stop offset="1" stop-color="#008BFF"/>
+    </linearGradient>
+    <linearGradient id="gf" gradientUnits="userSpaceOnUse" x1="56" y2="336" x2="256" y2="96">
       <stop offset="0" stop-color="#0057D9"/>
-      <stop offset="0.6" stop-color="#008BFF"/>
-      <stop offset="1" stop-color="#20B9FF"/>
+      <stop offset="0.5" stop-color="#0A7BFF"/>
+      <stop offset="1" stop-color="#3FB0FF"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="112" fill="#002B5C"/>
-  <g transform="translate(160 144) scale(8)">
-    <path fill="url(#g)" d="M18.2 0.8 C11.4 5.2 7.2 11.6 5.6 19.4 L4.4 27.2 C9.8 24.9 14.2 21 16.6 16.2 C18.7 12 19.2 6.3 18.2 0.8 Z"/>
+  <g transform="translate(128 176) scale(2.56)">
+    <path fill="url(#g)" d="M2 78C24 58 40 30 58 13C68 4 84 1.5 100 0L83 44C78 58 68 66 52 70C36 74 18 76.5 2 78Z"/>
+    <path fill="url(#gf)" opacity="0.9" d="M2 78C34 58 68 30 100 0L83 44C78 58 68 66 52 70C36 74 18 76.5 2 78Z"/>
   </g>
 </svg>
