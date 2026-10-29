@@ -22,7 +22,7 @@ export default function Logo({ variant = "color", height = 26 }: { variant?: "co
           d="M18.2 0.8 C11.4 5.2 7.2 11.6 5.6 19.4 L4.4 27.2 C9.8 24.9 14.2 21 16.6 16.2 C18.7 12 19.2 6.3 18.2 0.8 Z"
         />
       </svg>
-      <span className="wordmark">AirPR</span>
+      <span className={"wordmark" + (variant === "white" ? " white" : "")}>AirPR</span>
     </span>
   );
 }
