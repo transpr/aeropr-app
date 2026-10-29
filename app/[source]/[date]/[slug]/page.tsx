@@ -7,6 +7,7 @@ import { slugifyTitle, releaseAbsoluteUrl } from "../../../../lib/releaseUrl";
 import { CATEGORY_LABELS, formatDate, isDateEstimated } from "../../../../lib/labels";
 import { t } from "../../../../lib/dictionaries";
 import { getLocale } from "../../../../lib/i18n";
+import { localizeRelease } from "../../../../lib/translate";
 import { orgByDbName, detectOrgsInText, logoUrl } from "../../../../lib/orgs";
 
 export const dynamic = "force-dynamic";
@@ -44,16 +45,19 @@ export default async function ReleasePage({ params }: { params: Promise<{ source
   const r = await findRelease(source, date, slug);
   if (!r) notFound();
 
+  // Translate the release into the visitor's locale (cached in Supabase).
+  const loc = await localizeRelease(r, locale);
+
   const org = orgByDbName(r.org_name);
   const est = isDateEstimated(r);
   const coOrgs = detectOrgsInText(r.title + " " + (r.body_en || r.body).slice(0, 2500), r.org_name);
-  const body = r.body_en || r.body || "";
-  const paragraphs = body
+  const paragraphs = loc.body
     .split(/\n{2,}/)
     .map((p) => p.replace(/\s*\n\s*/g, " ").trim())
     .filter((p) => p.length > 0 && !/^Translations?:/i.test(p));
 
   // JSON-LD NewsArticle: makes releases readable by AI answer engines & Google News.
+  // Stays in the original language and title — the canonical URL does not change.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -84,7 +88,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ source
           ))}
           {coOrgs.length > 0 && <span className="badge-joint">{t(locale, "joint_badge")}</span>}
         </div>
-        <h1>{r.title}</h1>
+        <h1>{loc.title}</h1>
         {r.summary && <p className="summary">{r.summary}</p>}
         <div className="body">
           {paragraphs.map((p, i) => (
@@ -94,7 +98,10 @@ export default async function ReleasePage({ params }: { params: Promise<{ source
         {coOrgs.length > 0 && (
           <p className="joint-note">{t(locale, "joint_note")} {coOrgs.join(", ")}</p>
         )}
-        {r.language !== "en" && !r.body_en && (
+        {loc.translated && (
+          <p className="translation-note">{t(locale, "rel_ai_translation")} ({r.language.toUpperCase()})</p>
+        )}
+        {!loc.translated && r.language !== "en" && r.language !== locale && !r.body_en && (
           <p className="translation-note">({r.language.toUpperCase()} — {t(locale, "rel_translation")})</p>
         )}
         <div className="source-link">
