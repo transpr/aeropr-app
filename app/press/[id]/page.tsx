@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getRelease, type Release } from "../../../lib/supabase";
-import { t } from "../../lib/i18n";
+import { t } from "../../../lib/i18n";
 import { getLang } from "../../../lib/lang";
 import { categoryLabel, formatDate, isDateEstimated } from "../../../lib/labels";
 import { detectCoEmitters, faviconUrl, orgDomain, slugify } from "../../../lib/orgs";
