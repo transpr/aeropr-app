@@ -92,13 +92,13 @@ export async function getReleasesForFeed(feed: FeedRow, limit = 100): Promise<Re
   const rows = await supabase<Release[]>(q);
   // f.sources holds org display names (as shown in the feed builder UI).
   if (f.sources?.length) {
-    return rows.filter((r) => f.sources.includes(r.org_name));
+    return rows.filter((r) => (f.sources as string[]).includes(r.org_name));
   }
   if (f.categories?.length) {
-    return rows.filter((r) => (r.categories ?? []).some((c) => f.categories.includes(c)));
+    return rows.filter((r) => (r.categories ?? []).some((c) => (f.categories as string[]).includes(c)));
   }
   if (f.keywords?.length) {
-    const kws = f.keywords.map((k: string) => k.toLowerCase());
+    const kws: string[] = (f.keywords as string[]).map((k) => k.toLowerCase());
     return rows.filter((r) => {
       const hay = (r.title + "\n" + (r.body_en || r.body)).toLowerCase();
       return kws.some((k) => hay.includes(k));
