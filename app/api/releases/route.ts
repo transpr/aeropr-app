@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "sector must be air or rail" }, { status: 400 });
   }
   try {
-    const releases = await getLatest(sector, limit);
+    const releases = await getLatest(sector, {}, limit);
     return NextResponse.json({ sector, count: releases.length, releases });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
