@@ -32,7 +32,10 @@ export default async function PressPage({ searchParams }: PageProps) {
     orgs = await getOrgs("air");
   } catch { /* empty state */ }
   if (sp.org) releases = releases.filter((r) => r.org_name === sp.org);
-  if (sp.type && TYPE_SETS[sp.type]) releases = releases.filter((r) => TYPE_SETS[sp.type].includes(r.source_type));
+  if (sp.type && TYPE_SETS[sp.type]) {
+    const set = TYPE_SETS[sp.type];
+    releases = releases.filter((r) => set.includes(r.source_type));
+  }
 
   const qs = (over: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
