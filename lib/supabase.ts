@@ -61,9 +61,12 @@ export async function getReleaseById(id: string): Promise<Release | null> {
   return rows?.[0] ?? null;
 }
 
-export async function getReleasesByOrg(orgName: string, limit = 100): Promise<Release[]> {
+export async function getReleasesByOrg(orgName: string | string[], limit = 100): Promise<Release[]> {
+  const names = (Array.isArray(orgName) ? orgName : [orgName])
+    .map((n) => `"${n.replace(/"/g, "")}"`)
+    .join(",");
   return supabase<Release[]>(
-    "press_releases?sector=eq.air&org_name=eq." + encodeURIComponent(orgName) + "&select=*&order=published_at.desc&limit=" + limit,
+    "press_releases?sector=eq.air&org_name=in.(" + encodeURIComponent(names) + ")&select=*&order=published_at.desc&limit=" + limit,
   );
 }
 
@@ -98,7 +101,7 @@ export async function getReleasesForFeed(feed: FeedRow, limit = 100): Promise<Re
     const kws = f.keywords.map((k: string) => k.toLowerCase());
     return rows.filter((r) => {
       const hay = (r.title + "\n" + (r.body_en || r.body)).toLowerCase();
-      return kws.some((k: string) => hay.includes(k));
+      return kws.some((k) => hay.includes(k));
     });
   }
   return rows;

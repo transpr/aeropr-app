@@ -21,7 +21,7 @@ export default async function OrgPage({ params }: { params: Promise<{ slug: stri
   if (!org) notFound();
 
   let releases: Release[] = [];
-  try { releases = await getReleasesByOrg(org.name, 200); } catch { /* empty */ }
+  try { releases = await getReleasesByOrg([org.name, ...org.aliases], 200); } catch { /* empty */ }
 
   return (
     <div className="container">
