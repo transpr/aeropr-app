@@ -16,9 +16,12 @@ export default async function Home() {
   const locale = await getLocale();
   let releases: Release[] = [];
   try { releases = await getLatest("air", {}, 20); } catch { releases = []; }
+  const latest = releases.slice(0, 6);
   return (
     <>
       <section className="hero">
+        <div className="hero-photo" aria-hidden="true" />
+        <div className="hero-veil" aria-hidden="true" />
         <div className="container inner">
           <div className="kicker">{t(locale, "hero_kicker")}</div>
           <h1>{t(locale, "hero_title")}</h1>
@@ -49,10 +52,10 @@ export default async function Home() {
           <span className="count"><a href="/press">{t(locale, "view_all")}</a></span>
         </div>
         <p className="section-sub">{t(locale, "latest_sub")}</p>
-        <div className="releases">
+        <div className="releases cards">
           {releases.length === 0 ? (
             <p style={{ padding: 20, color: "var(--color-text-secondary)" }}>{t(locale, "empty")}</p>
-          ) : releases.map((r) => <ReleaseRow key={r.id} r={r} locale={locale} />)}
+          ) : latest.map((r) => <ReleaseRow key={r.id} r={r} locale={locale} />)}
         </div>
       </section>
     </>
