@@ -3,6 +3,7 @@ import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import "./addon.css";
 import LocaleSwitcher from "./LocaleSwitcher";
+import Logo from "./Logo";
 import { t } from "../lib/dictionaries";
 import { getLocale } from "../lib/i18n";
 
@@ -10,7 +11,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-plex-mono" });
 
 export const metadata: Metadata = {
-  title: "AeroPR — Aviation press release monitoring",
+  title: "AirPR — Aviation press release monitoring",
   description:
     "Official releases from airlines, airports, manufacturers and industry organizations. Original publication dates and source links preserved.",
 };
@@ -22,8 +23,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.variable + " " + plexMono.variable}>
         <header className="site-header">
           <div className="container inner">
-            <a className="logo" href="/" aria-label="AeroPR home">
-              <span className="dot" /><span className="dot dot2" /> AeroPR
+            <a className="logo" href="/" aria-label="AirPR home">
+              <Logo height={24} />
             </a>
             <nav className="nav" aria-label="Main">
               <a href="/press">{t(locale, "nav_press")}</a>
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <a href="/feeds">{t(locale, "nav_feeds")}</a>
               <a href="/api/releases?sector=air&amp;limit=10">API</a>
               <LocaleSwitcher locale={locale} />
+              <a className="btn-primary cta" href="/feeds">{t(locale, "nav_cta")}</a>
             </nav>
           </div>
         </header>
