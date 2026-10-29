@@ -1,0 +1,19 @@
+/* v3 — locale switcher and joint-statement note */
+.locale-switch {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: 3px 6px;
+  cursor: pointer;
+  margin-left: 12px;
+}
+.joint-note {
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+  border-top: 1px dashed var(--color-border);
+  padding-top: 10px;
+}

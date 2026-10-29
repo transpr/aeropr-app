@@ -56,9 +56,15 @@ export async function getLatest(sector: string, f: FeedFilters = {}, limit = 60)
   });
 }
 
-export async function getRelease(id: string): Promise<Release | null> {
+export async function getReleaseById(id: string): Promise<Release | null> {
   const rows = await supabase<Release[]>("press_releases?id=eq." + encodeURIComponent(id) + "&select=*");
   return rows?.[0] ?? null;
+}
+
+export async function getReleasesByOrg(orgName: string, limit = 100): Promise<Release[]> {
+  return supabase<Release[]>(
+    "press_releases?sector=eq.air&org_name=eq." + encodeURIComponent(orgName) + "&select=*&order=published_at.desc&limit=" + limit,
+  );
 }
 
 export async function getOrgs(sector: string): Promise<{ org_name: string; n: number }[]> {
@@ -68,13 +74,6 @@ export async function getOrgs(sector: string): Promise<{ org_name: string; n: nu
   const counts = new Map<string, number>();
   for (const r of rows) counts.set(r.org_name, (counts.get(r.org_name) ?? 0) + 1);
   return [...counts.entries()].map(([org_name, n]) => ({ org_name, n })).sort((a, b) => b.n - a.n);
-}
-
-export async function getOrgReleases(sector: string, org: string, limit = 200): Promise<Release[]> {
-  return supabase<Release[]>(
-    "press_releases?sector=eq." + sector + "&org_name=eq." + encodeURIComponent(org) +
-    "&select=*&order=published_at.desc&limit=" + limit,
-  );
 }
 
 export async function getFeed(token: string): Promise<FeedRow | null> {
@@ -88,6 +87,7 @@ export async function getReleasesForFeed(feed: FeedRow, limit = 100): Promise<Re
   if (f.org_groups?.length) q += "&org_group=in.(" + f.org_groups.join(",") + ")";
   if (f.alliances?.length) q += "&alliance=in.(" + f.alliances.join(",") + ")";
   const rows = await supabase<Release[]>(q);
+  // f.sources holds org display names (as shown in the feed builder UI).
   if (f.sources?.length) {
     return rows.filter((r) => f.sources.includes(r.org_name));
   }

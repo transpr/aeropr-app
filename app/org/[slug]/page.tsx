@@ -1,44 +1,41 @@
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import ReleaseRow from "../../ReleaseRow";
-import { getOrgs, getOrgReleases, type Release } from "../../../lib/supabase";
-import { t } from "../../../lib/i18n";
-import { getLang } from "../../../lib/lang";
-import { faviconUrl, orgDomain, slugify } from "../../../lib/orgs";
+import { getOrgs, getReleasesByOrg, type Release } from "../../../lib/supabase";
+import { t } from "../../../lib/dictionaries";
+import { getLocale } from "../../../lib/i18n";
+import { findOrgBySlug, orgByDbName, logoUrl, slugifyName } from "../../../lib/orgs";
 
 export const dynamic = "force-dynamic";
 
-interface PageProps { params: Promise<{ slug: string }> }
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export default async function OrgPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const orgs = await getOrgs("air").catch(() => []);
-  const match = orgs.find((o) => slugify(o.org_name) === slug);
-  return { title: (match ? match.org_name : slug) + " — AeroPR" };
-}
+  const locale = await getLocale();
 
-export default async function OrgPage({ params }: PageProps) {
-  const lang = await getLang();
-  const { slug } = await params;
-  const orgs = await getOrgs("air").catch(() => [] as { org_name: string; n: number }[]);
-  const match = orgs.find((o) => slugify(o.org_name) === slug);
-  if (!match) notFound();
+  let org = findOrgBySlug(slug);
+  if (!org) {
+    // Org present in the data but not in the registry: resolve by slugified DB name.
+    const dbOrgs = await getOrgs("air").catch(() => [] as { org_name: string; n: number }[]);
+    const match = dbOrgs.find((o) => slugifyName(o.org_name) === slug);
+    if (match) org = orgByDbName(match.org_name);
+  }
+  if (!org) notFound();
 
   let releases: Release[] = [];
-  try { releases = await getOrgReleases("air", match.org_name); } catch { releases = []; }
-  const domain = orgDomain(match.org_name, releases[0]?.source_url ?? null);
+  try { releases = await getReleasesByOrg(org.name, 200); } catch { /* empty */ }
 
   return (
     <div className="container">
-      <div className="page-head org-hero">
-        <img src={faviconUrl(domain, 64)} alt="" width={32} height={32} />
-        <h2>{match.org_name}</h2>
-        <span className="count">{match.n} {t(lang, "org_releases")} · {t(lang, "updated_cont")}</span>
+      <div className="page-head org-hero" style={{ alignItems: "center", gap: 12 }}>
+        <img src={logoUrl(org)} alt="" width={28} height={28} />
+        <h2>{org.name}</h2>
+        <span className="count">{releases.length} {t(locale, "org_releases")}</span>
       </div>
       <div className="releases">
         {releases.length === 0 ? (
-          <p style={{ padding: 20, color: "var(--color-text-secondary)" }}>{t(lang, "no_releases")}</p>
-        ) : releases.map((r) => <ReleaseRow key={r.id} r={r} lang={lang} />)}
+          <p style={{ padding: 20, color: "var(--color-text-secondary)" }}>{t(locale, "no_match")}</p>
+        ) : releases.map((r) => (
+          <ReleaseRow key={r.id} r={r} locale={locale} />
+        ))}
       </div>
     </div>
   );
