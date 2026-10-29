@@ -1,58 +1,62 @@
-import { getOrgs, getLatest, type Release } from "../../lib/supabase";
+import { REGISTRY, REGISTRY_STATS } from "../../lib/registry";
 import { t } from "../../lib/dictionaries";
-import { getLocale } from "../../lib/i18n";
+import { getLocale, type Locale } from "../../lib/i18n";
 
 export const dynamic = "force-dynamic";
 
+const TYPE_ORDER = ["airline", "airport", "oem", "mro", "fuel", "regulator", "alliance", "mixed"];
+const TYPE_LABELS: Record<Locale, Record<string, string>> = {
+  en: { airline: "Airlines", airport: "Airports & groups", oem: "Manufacturers & engines", mro: "MRO", fuel: "Fuel & SAF", regulator: "Regulators & safety boards", alliance: "Alliances", mixed: "Industry organizations" },
+  fr: { airline: "Compagnies aériennes", airport: "Aéroports & groupes", oem: "Constructeurs & motoristes", mro: "MRO", fuel: "Carburant & SAF", regulator: "Régulateurs & organismes d'enquête", alliance: "Alliances", mixed: "Organisations du secteur" },
+  es: { airline: "Aerolíneas", airport: "Aeropuertos y grupos", oem: "Fabricantes y motores", mro: "MRO", fuel: "Combustible y SAF", regulator: "Reguladores", alliance: "Alianzas", mixed: "Organizaciones del sector" },
+  de: { airline: "Fluggesellschaften", airport: "Flughäfen & Gruppen", oem: "Hersteller & Triebwerke", mro: "MRO", fuel: "Treibstoff & SAF", regulator: "Regulierungsbehörden", alliance: "Allianzen", mixed: "Branchenorganisationen" },
+  it: { airline: "Compagnie aeree", airport: "Aeroporti e gruppi", oem: "Costruttori e motori", mro: "MRO", fuel: "Carburante e SAF", regulator: "Regolatori", alliance: "Alleanze", mixed: "Organizzazioni di settore" },
+  pt: { airline: "Companhias aéreas", airport: "Aeroportos e grupos", oem: "Fabricantes e motores", mro: "MRO", fuel: "Combustível e SAF", regulator: "Reguladores", alliance: "Alianças", mixed: "Organizações do setor" },
+};
+
+function collator(locale: string) {
+  return new Intl.Collator(locale, { sensitivity: "base" });
+}
+
 export default async function SourcesPage() {
   const locale = await getLocale();
-  let orgs: { org_name: string; n: number }[] = [];
-  let recent: Release[] = [];
-  try {
-    orgs = await getOrgs("air");
-    recent = await getLatest("air", {}, 500);
-  } catch { /* empty */ }
-
-  const lastRelease = new Map<string, string>();
-  for (const r of recent) {
-    const prev = lastRelease.get(r.org_name);
-    if (!prev || new Date(r.published_at) > new Date(prev)) lastRelease.set(r.org_name, r.published_at);
-  }
-  const lastCrawl = recent[0]?.created_at ?? null;
+  const c = collator(locale);
+  const byType = TYPE_ORDER
+    .map((type) => ({ type, rows: REGISTRY.filter((r) => r.type === type) }))
+    .filter((g) => g.rows.length > 0)
+    .map((g) => ({ ...g, rows: [...g.rows].sort((a, b) => c.compare(a.name, b.name)) }));
 
   return (
     <div className="container">
       <div className="page-head">
-        <h2>{t(locale, "sources_title")}</h2>
-        {lastCrawl && (
-          <span className="count">{t(locale, "last_crawl")} {new Date(lastCrawl).toLocaleString("en-GB")}</span>
-        )}
+        <h1>{t(locale, "sources_title")}</h1>
       </div>
-      <p style={{ color: "var(--color-text-secondary)", maxWidth: 720, marginBottom: 18 }}>
-        {t(locale, "sources_desc")}
+      <p className="sources-intro">
+        {t(locale, "sources_intro")}
       </p>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>{t(locale, "col_org")}</th>
-            <th>{t(locale, "col_count")}</th>
-            <th>{t(locale, "col_last")}</th>
-            <th>{t(locale, "col_status")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orgs.length === 0 ? (
-            <tr><td colSpan={4} style={{ color: "var(--color-text-secondary)" }}>{t(locale, "no_sources")}</td></tr>
-          ) : orgs.map((o) => (
-            <tr key={o.org_name}>
-              <td>{o.org_name}</td>
-              <td className="mono">{o.n}</td>
-              <td className="mono">{lastRelease.get(o.org_name) ? new Date(lastRelease.get(o.org_name)!).toLocaleDateString("en-GB") : "—"}</td>
-              <td className="status-ok">{t(locale, "monitored")}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="sources-stats">
+        <div className="stat"><strong>{REGISTRY_STATS.total}</strong><span>{t(locale, "sources_total")}</span></div>
+        <div className="stat"><strong>{REGISTRY_STATS.airlines}</strong><span>{t(locale, "sources_airlines")}</span></div>
+        <div className="stat"><strong>{REGISTRY_STATS.direct}</strong><span>{t(locale, "sources_direct")}</span></div>
+        <div className="stat"><strong>{REGISTRY_STATS.groups}</strong><span>{t(locale, "sources_groups")}</span></div>
+      </div>
+      {byType.map((g) => (
+        <section key={g.type} className="sources-group">
+          <h2>
+            {TYPE_LABELS[locale]?.[g.type] ?? g.type}
+            <span className="count"> · {g.rows.length}</span>
+          </h2>
+          <ul className="sources-list">
+            {g.rows.map((r) => (
+              <li key={r.slug} className="source-item">
+                <a href={"/press?org=" + encodeURIComponent(r.name)}>{r.name}</a>
+                {r.group && <span className="src-group">{r.group}</span>}
+                {r.layer === "direct" && <span className="src-layer direct">direct</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
   );
 }
