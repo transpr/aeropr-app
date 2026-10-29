@@ -1,7 +1,7 @@
 import FeedBuilder from "./FeedBuilder";
 import { getOrgs } from "../../lib/supabase";
 import { CATEGORY_LABELS } from "../../lib/labels";
-import { t } from "../lib/i18n";
+import { t } from "../../lib/i18n";
 import { getLang } from "../../lib/lang";
 
 export const dynamic = "force-dynamic";
