@@ -1,3 +1,5 @@
+@layer legacy;
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
@@ -101,6 +103,8 @@
 }
 
 
+
+@layer legacy {
 /* ====================================================================
    Legacy CSS — real-site pages that predate the v0 design
    (sources, feeds, org, article pages). Do not remove.
@@ -373,6 +377,9 @@ body:has(.hero) .site-header { position: absolute; left: 0; right: 0; background
 .nd-preview .pv-actions svg { width: 16px; height: 16px; color: var(--color-accent); }
 body:has(.nd-root) .site-footer { display: none; }
 
+
+
+} /* end @layer legacy */
 
 /* ====================================================================
    Adapter — v0 pages (home, /news) vs legacy pages.
